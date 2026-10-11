@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orions Pillars of Creation</title>
+    <!-- this is a comment also is where the css goes to-->
+    <style> 
+        :root{
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --bg: #f3f4f6;
+        }
+
+        * {margin: 0; padding: 0; box-sizing: border-box; }
+
+        body{
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header{
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            display: none;
+        }
+        header.visible {
+            display: block;
+        }
+
+        nav{
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo{
+            font-size: 1.3rem; 
+            font-weight: 700; 
+            color: var(--primary);
+        }
+
+        nav ul{
+            display: flex;
+            gap:1.25rem;
+            list-style:none;
+        }
+
+        nav button{
+            background: none;
+            border:none;
+            font-size:1rem;
+            font-weight:500;
+            color: var(--text);
+            cursor: pointer;
+            padding: .25rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav button:hover{
+            color: var(--primary);
+        }
+
+        nav button.action{
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        main{
+            flex:1;
+            display:flex;
+        }
+        .page{
+            display: none;
+            width: 100%;
+            animation: fade .35s ease;
+        }
+        .page.active {display: flex;}
+
+        @keyframes fade{
+            from {opacity: 0; transform: translateY(8px); }
+            to {opacity: 1; transform: none;}
+        }
+
+        .center{
+            margin: auto;
+            width: 90%;
+            max-width: 650px;
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .center.wide{
+            max-width:950px;
+        }
+
+        #page-1{
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: #fff;
+        }
+
+        #page-1 h1{
+            font-size: 3rem; margin-bottom:1rem;
+        }
+
+        #page-1 p{
+            font-size: 1.2rem; margin-bottom:2rem; opacity: .95;
+        }
+
+        .btn{
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: .85rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform .2s, background .2s;
+        }
+        .btn:hover {
+            background: var(--primary-dark); transform: translateY(-2px);
+        }
+
+        .btn.small{
+            padding: .55rem 1.1rem;
+            font-size: .9rem;
+        }
+        .btn.secondary{
+            background: #e5e7eb;
+            color: var(--text);
+        }
+
+        .btn.secondary:hover{
+            background: #d1d5db;
+        }
+        
+        #page-1 .btn{
+            background: #fff;
+            color:var(--primary);
+        }
+
+        #page-1 .btn:hover{
+            background: #f3f4f6;
+        }
+
+        .box{
+            background:#fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+            padding: 2.5rem;
+            text-align: left;
+        }
+
+        .box h2{
+            margin-bottom: 1rem;
+        }
+
+        .box p{
+            color: var(--muted); margin-bottom:1rem;
+        }
+
+        .actions{
+            display: flex; 
+            gap: .75rem; 
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .person-string{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: .5rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            border-bottom:1px solid #e5e7eb;
+        }
+
+        .person-string strong{
+            font-size: 1.1rem;
+        }
+
+        .person-string span{
+            color: var(--muted); 
+            font-size: .95rem;
+        }
+
+        .controls{
+            display: flex;
+            gap: .6rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .conn-status{
+            font-size: .9rem; 
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .dot{
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #9ca3af;
+        }
+
+        .dot.live{
+            background: #22c55e;
+        }
+
+        .metrics{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .metric{
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .metric h3{
+            font-size: 1rem;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: .25rem;
+        }
+
+        .reading{
+            display:flex;
+            align-items: baseline;
+            gap: .5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .reading .value{
+            font-size: 2.4rem; 
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .reading .unit{
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .badge{
+            color: #fff;
+            font-size: .8rem;
+            font-weight: 600;
+            padding: .2rem .65rem;
+            border-radius: 999px;
+            background: #9ca3af;
+        }
+
+        .meter{
+            position: relative;
+            display: flex;
+            height: 14px;
+            border-radius: 7px;
+            overflow: hidden;
+            margin: 0 0 .4rem;
+        }
+
+        .meter div.zone{
+            height: 100%;
+        }
+
+        .marker {
+            position: absolute;
+            top: -4px;
+            width: 4px;
+            height: 22px;
+            background: #111827;
+            border-radius: 2px;
+            left: 0;
+            transition: left .4s;
+            display: none;
+        }
+
+        .meter-wrap{
+            position: relative;
+        }
+
+        .legend{
+            display: flex;
+            flex-wrap: wrap;
+            gap: .3rem .9rem;
+            font-size: .75rem;
+            color: var(--muted);
+            margin-bottom: 1.25rem;
+        }
+
+        .legend i {
+            display: inline-block; 
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-right: .3rem;
+        }
+
+        .chart-title{
+            font-size: .85rem;
+            color: var(--muted);
+            margin-bottom: .4rem;
+        }
+
+        .chart{
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            height: 170px;
+            padding: 1.4rem .5rem 0;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-bottom: 2px solid #e5e7eb
+        }
+
+        .bar{
+            flex:1;
+            position: relative;
+            min-height: 3px;
+            border-radius: 4px 4px 0 0;
+            background: #e5e7eb;
+            transition: height .4s, background .4s;
+        }
+
+        .bar::after{
+            content: attr(data-v);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: .65rem;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .bar.latest{
+            outline: 2px solid #111827;
+            outline-offset: 1px;
+        }
+
+        .info-row{
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: .8rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .info-row span:first-child{
+            font-weight: 600;
+        }
+
+        .info-row span:last-child{
+            color: var(--muted);
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .summary-heading{
+            margin: 1.5rem 0 .25rem;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .summary-heading:first-child{
+            margin-top: 0;
+        }
+
+        footer{
+            text-align: center;
+            color: var(--muted);
+            padding: 1rem;
+            font-size: .9rem;
+        }
+
+        @media(max-width: 520px){
+            .box{padding: 1.5rem;}
+            nav ul {gap: .8rem;}
+        }
+    </style>
+</head>
+<body>
+
+    <header id="site-header">
+        <nav>
+            <span class="logo">Orions Pillars of Creation</span>
+            <ul>
+                <li><button data-page="2">Regulations</button></li>
+                 <li><button data-page="3">Your Data</button></li>
+                  <li><button data-page="4">Help</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!--Welcome page-->
+        <section class="page active" id="page-1">
+            <div class="center">
+                <h1>DutchOven</h1>
+                <p>welcome</p>
+                <button class="btn" onclick="showPage(2)">Enter</button>
+            </div>
+        </section>
+
+        <!--Page 2: Osha Guidline-->
+        <section class="page" id="page-2">
+            <div class="center">
+                <div class ="box">
+                    <h2> Hello!</h2>
+                    <p>osha rules here</p>
+                    <p>more</p>
+                    <div class="actions">
+                         <button class="btn secondary" onclick="showPage(1)"> Back</button>
+                         <button class="btn" onclick="showPage(3)"> Contunue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--Page 3: Live expusure-->
+        <section class="page" id="page-3">
+            <div class="center wide">
+                <div class="box">
+                    <h2>Expsure Levels</h2>
+                    <p>moreeeee</p>
+                    <div class="person-string">
+                        <div><strong id="person-name"></strong></div>
+                        <span id="person-meta"></span>
+                    </div>
+
+                    <div class="controls">
+                        <button class="btn small" id="live-btn" onclick="toggleLive()">Live updates</button>
+                        <button class="btn small secondary" onclick="fetchReadings()">Refresh Now</button>
+                        <button class="btn small secondary" id="demo-btn" onclick="toggleDemo()">Start demo data</button>
+                          <span class="conn-status"><span class="dot" id="conn-dot"></span><span id="conn-text">Not connected</span></span>
+                    </div>
+
+                    
+                    <div class="metrics" id="sensor-metrics"></div>
+
+                    <div class="actions">
+                        <button class="btn secondary" onclick="showPage(2)">Back</button>
+                        <button class="btn" onclick="showPage(4)">View Help</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--Page 4: Help-->
+        <section class="page" id="page-4">
+            <div class="center">
+                <div class="box">
+                    <h2>Exposrue summary</h2>
+                    <div id="output"></div>
+                    <div class="actions">
+                        <button class="btn secondary" onclick="showPage(3)">Back to Live Data</button>
+                        <button class="btn" onclick="startOver()" >StartOver</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>&copy; <span id="year"></span> Exposure Monitor</footer>
+
+    <!-- this says about javascript-->
+    <script> 
+
+        const SENSOR_CONFIG = {
+            uv: {
+                label: "UV Sensor",
+                field: "uv",
+                unit: "raw",
+                max: 1023,
+                decimals: 0
+            },
+            light: {
+                label: "Light Sensor",
+                field: "light",
+                unit: "raw",
+                max: 1023,
+                decimals: 0
+            },
+            sound: {
+                label: "Sound Sensor",
+                field: "sound",
+                unit: "raw",
+                max: 1023,
+                decimals: 0
+            },
+            h2s: {
+                label: "Hydrogen Sulfide",
+                field: "h2s",
+                unit: "ppm",
+                decimals: 3
+            },
+            co: {
+                label: "Carbon Monoxide",
+                field: "co",
+                unit: "ppm",
+                decimals: 3
+            },
+            benzene: {
+                label: "Benzene",
+                field: "benzene",
+                unit: "ppm",
+                decimals: 3
+            },
+            oxygen: {
+                label: "Oxygen",
+                field: "oxygen",
+                unit: "%",
+                decimals: 2
+            }
+        };
+
+        const WORKER_ID = "worker_001";
+        const DEVICE_ID = "arduino_001";
+
+        const FIELDS = {
+            worker: "worker_id",
+            device: "device_id",
+            sensors: "sensors",
+            time: "received_at"
+        };
+
+        const BARS_SHOWN = 12;
+        const MAX_STORED = 500;
+
+        let readings =[];
+
+        function addReading(uv, light, sound, h2s = null, co = null, benzene = null, oxygen = null) {
+            readings.push({
+                worker_id: WORKER_ID,
+                device_id: DEVICE_ID,
+                time: new Date(),
+                sensors: { uv, light, sound, h2s, co, benzene, oxygen }
+            });
+
+            if (readings.length > MAX_STORED) readings.shift();
+
+            renderLive();
+            renderSummary();
+        }
+
+        function clearReadings(){
+            readings = [];
+            renderLive();
+            renderSummary();
+        }
+
+        function esc(str){
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        function clamp(n, lo, hi){
+            return Math.min(hi, Math.max(lo, n));
+        }
+
+        
+
+        function showPage(n){
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + n).classList.add('active');
+            document.getElementById('site-header').classList.toggle('visible', n !== 1);
+            document.querySelectorAll('nav button').forEach(b => {
+                   b.classList.toggle('active', Number(b.dataset.page) === n);
+            });
+            window.scrollTo(0,0);
+        }
+
+        document.querySelectorAll('nav button').forEach(b => {
+            b.addEventListener('click', () => showPage(Number(b.dataset.page)));
+        });
+ 
+function renderLive() {
+    const last = readings[readings.length - 1];
+
+    for (const [key, sensor] of Object.entries(SENSOR_CONFIG)) {
+        const valueEl = document.getElementById(`${key}-value`);
+        const badge = document.getElementById(`${key}-badge`);
+        const chart = document.getElementById(`${key}-chart`);
+
+        if (!valueEl || !badge || !chart) continue;
+
+        const value = last?.sensors?.[key];
+
+        if (value == null || !Number.isFinite(value)) {
+            valueEl.textContent = "--";
+            badge.textContent = "No data";
+            badge.style.background = "#9ca3af";
+        } else {
+            valueEl.textContent = value.toFixed(sensor.decimals);
+            badge.textContent = "Latest reading";
+            badge.style.background = "#64748b";
+        }
+
+        const recent = readings
+            .slice(-BARS_SHOWN)
+            .map(r => r.sensors?.[key])
+            .filter(v => v != null && Number.isFinite(v));
+
+        chart.replaceChildren();
+
+        const maxValue = Math.max(1, ...recent.map(Math.abs));
+
+        for (const v of recent) {
+            const bar = document.createElement("div");
+            bar.className = "bar";
+            bar.style.height =
+                `${Math.max(2, Math.abs(v) / maxValue * 100)}%`;
+            bar.dataset.v = v.toFixed(sensor.decimals);
+            chart.appendChild(bar);
+        }
+    }
+}
+ 
+ 
+
+function sensorStats(key) {
+    const values = readings
+        .map(r => r.sensors[key])
+        .filter(v => v !== null && Number.isFinite(v));
+
+    if (values.length === 0) {
+        return {
+            count: 0,
+            average: null,
+            highest: null,
+            lowest: null
+        };
+    }
+
+    return {
+        count: values.length,
+        average: values.reduce((sum, v) => sum + v, 0)
+            / values.length,
+        highest: Math.max(...values),
+        lowest: Math.min(...values)
+    };
+}
+ 
+function row(label, value) {
+  return '<div class="info-row"><span>' + label + '</span><span>' + value + '</span></div>';
+}
+ 
+function renderSummary() {
+    const out = document.getElementById('output');
+    let html = '<h3 class="summary-heading">Worker and device</h3>';
+    html += row('Worker ID', esc(WORKER_ID));
+    html += row('Device ID', esc(DEVICE_ID));
+
+    if (readings.length === 0) {
+        html += '<p style="margin-top:1.5rem">No readings yet. Check the backend connection on the Live Readings page, or start demo data.</p>';
+        out.innerHTML = html;
+        return;
+    }
+
+    const last = readings[readings.length - 1];
+    const lastTime = last.time instanceof Date
+        ? last.time
+        : (last.time ? new Date(last.time) : null);
+
+    html += '<h3 class="summary-heading">Latest reading</h3>';
+    html += row('Timestamp', lastTime && !Number.isNaN(lastTime.getTime())
+        ? esc(lastTime.toLocaleString())
+        : 'Not provided');
+    html += row('Readings loaded', String(readings.length));
+
+    html += '<h3 class="summary-heading">Sensor statistics</h3>';
+    for (const [key, sensor] of Object.entries(SENSOR_CONFIG)) {
+        const stats = sensorStats(key);
+        const fmt = value => value == null ? 'N/A' : value.toFixed(sensor.decimals) + (sensor.unit ? ' ' + sensor.unit : '');
+        html += row(sensor.label + ' — latest', fmt(last.sensors?.[key]));
+        html += row('Average', fmt(stats.average));
+        html += row('Highest', fmt(stats.highest));
+        html += row('Lowest', fmt(stats.lowest));
+        html += row('Valid samples', String(stats.count));
+    }
+
+    html += '<p class="note" style="margin-top:1rem">Raw UV, light, and sound readings are uncalibrated sensor values. They are not, by themselves, UV dose, lux, decibels, or regulatory exposure measurements. A null value means that measurement was not provided.</p>';
+    out.innerHTML = html;
+}
+
+ 
+
+const API = {
+    baseUrl: "http://localhost:8000",
+    pollMs: 5000
+};
+
+function apiUrl() {
+    return API.baseUrl +
+        "/workers/" + encodeURIComponent(WORKER_ID) +
+        "/readings?limit=" + MAX_STORED;
+}
+ 
+let liveTimer = null;
+ 
+function setStatus(text, live) {
+  document.getElementById('conn-text').textContent = text;
+  document.getElementById('conn-dot').classList.toggle('live', !!live);
+}
+ 
+// Replace everything on screen with the rows that came from the database.
+// Returns how many rows were kept for this worker + device.
+
+function loadReadings(list) {
+    readings = list
+        .filter(r => r && r.worker_id === WORKER_ID)
+        .filter(r => r.sensors && typeof r.sensors === "object")
+        .map(r => ({
+            worker: r.worker_id,
+            device: r.device_id,
+            time: (r.timestamp || r.received_at) ? new Date(r.timestamp || r.received_at) : null,
+            sensors: {
+                uv: toNumberOrNull(r.sensors.uv_raw),
+                light: toNumberOrNull(r.sensors.light_raw),
+                sound: toNumberOrNull(r.sensors.sound_raw),
+                h2s: toNumberOrNull(r.sensors.hydrogen_sulfide_ppm),
+                co: toNumberOrNull(r.sensors.carbon_monoxide_ppm),
+                benzene: toNumberOrNull(r.sensors.benzene_ppm),
+                oxygen: toNumberOrNull(r.sensors.oxygen_percent)
+            }
+        }))
+        .filter(r => !r.time || !isNaN(r.time.getTime()))
+        .filter(r => r.device === DEVICE_ID)
+        .sort((a, b) =>
+            (a.time?.getTime() ?? 0) - (b.time?.getTime() ?? 0)
+        )
+        .slice(-MAX_STORED);
+
+    renderLive();
+    renderSummary();
+
+    return readings.length;
+}
+
+function toNumberOrNull(value) {
+    if (value == null || value === "") return null;
+
+    const number = Number(value);
+    return Number.isFinite(number) ? number : null;
+}
+ 
+async function fetchReadings() {
+  if (demoTimer) return;              // don't overwrite demo data
+  try {
+    const res = await fetch(apiUrl(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const list = Array.isArray(data) ? data : data.readings;
+    if (!Array.isArray(list)) throw new Error('unexpected response format');
+    const kept = loadReadings(list);
+    if (list.length > 0 && kept === 0) {
+      setStatus('Data loaded, but none matched worker ' + WORKER_ID + ' / device ' + DEVICE_ID + ' (check FIELDS and IDs)', false);
+    } else {
+      setStatus('Live · updated ' + new Date().toLocaleTimeString(), true);
+    }
+  } catch (err) {
+    setStatus("Can't load data: " + err.message, false);
+  }
+}
+ 
+function startLive() {
+  if (liveTimer) return;
+  fetchReadings();
+  liveTimer = setInterval(fetchReadings, API.pollMs);
+  document.getElementById('live-btn').textContent = 'Pause live updates';
+}
+ 
+function stopLive() {
+  if (liveTimer) clearInterval(liveTimer);
+  liveTimer = null;
+  document.getElementById('live-btn').textContent = 'Resume live updates';
+  setStatus('Live updates paused', false);
+}
+ 
+function toggleLive() {
+  if (demoTimer) return;
+  if (liveTimer) stopLive(); else startLive();
+}
+ 
+
+let demoTimer = null;
+let demoUv = 260, demoLight = 400, demoSound = 300;
+ 
+function toggleDemo() {
+  if (demoTimer) {
+    stopDemo();
+    clearReadings();
+    startLive();
+    return;
+  }
+  stopLive();
+  clearReadings();
+  demoTimer = setInterval(() => {
+    demoUv = clamp(demoUv + (Math.random() - 0.5) * 80, 0, 1023);
+    demoLight = clamp(demoLight + (Math.random() - 0.5) * 100, 0, 1023);
+    demoSound = clamp(demoSound + (Math.random() - 0.5) * 70, 0, 1023);
+    addReading(Math.round(demoUv), Math.round(demoLight), Math.round(demoSound));
+  }, 1500);
+  document.getElementById('demo-btn').textContent = 'Stop demo data';
+  setStatus('Demo data running', true);
+}
+ 
+function stopDemo() {
+  if (demoTimer) clearInterval(demoTimer);
+  demoTimer = null;
+  document.getElementById('demo-btn').textContent = 'Start demo data';
+}
+ 
+
+ 
+function startOver() {
+  if (demoTimer) {
+    stopDemo();
+    clearReadings();
+    startLive();
+  }
+  showPage(1);
+}
+ 
+
+function buildSensorCards() {
+    const container = document.getElementById("sensor-metrics");
+    container.replaceChildren();
+
+    for (const [key, sensor] of Object.entries(SENSOR_CONFIG)) {
+        const card = document.createElement("div");
+        card.className = "metric";
+
+        const heading = document.createElement("h3");
+        heading.textContent = sensor.label;
+
+        const reading = document.createElement("div");
+        reading.className = "reading";
+
+        const value = document.createElement("span");
+        value.className = "value";
+        value.id = `${key}-value`;
+        value.textContent = "--";
+
+        const unit = document.createElement("span");
+        unit.className = "unit";
+        unit.textContent = sensor.unit;
+
+        const status = document.createElement("span");
+        status.className = "badge";
+        status.id = `${key}-badge`;
+        status.textContent = "Waiting for data";
+
+        reading.append(value, unit, status);
+        card.append(heading, reading);
+
+        const chartTitle = document.createElement("div");
+        chartTitle.className = "chart-title";
+        chartTitle.textContent = "Recent readings";
+
+        const chart = document.createElement("div");
+        chart.className = "chart";
+        chart.id = `${key}-chart`;
+
+        card.append(chartTitle, chart);
+        container.appendChild(card);
+    }
+}
+
+document.getElementById('person-name').textContent = 'Worker ID: ' + WORKER_ID;
+document.getElementById('person-meta').textContent = 'Device ID: ' + DEVICE_ID;
+document.getElementById('year').textContent = new Date().getFullYear();
+
+buildSensorCards();
+renderLive();
+renderSummary();
+startLive();
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>
